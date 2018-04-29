@@ -126,6 +126,11 @@
             <artifactId>hasher_${scala.version}</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-statebackend-rocksdb_${scala.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
 
     </dependencies>
 

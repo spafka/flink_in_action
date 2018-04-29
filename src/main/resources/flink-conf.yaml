@@ -1,0 +1,37 @@
+jobmanager.rpc.address: localhost
+jobmanager.rpc.port: 6123
+jobmanager.heap.mb: 256
+taskmanager.heap.mb: 512
+taskmanager.numberOfTaskSlots: 1
+taskmanager.memory.preallocate: false
+parallelism.default: 1
+jobmanager.web.port: 8081
+
+# yarn
+yarn.maximum-failed-containers: 99999
+
+#akka config
+akka.watch.heartbeat.interval: 5 s
+akka.watch.heartbeat.pause: 20 s
+akka.ask.timeout: 60 s
+akka.framesize: 20971520b
+
+#high-avaliability
+high-availability: zookeeper
+## 根据安装的zookeeper信息填写
+high-availability.zookeeper.quorum: localhost:2181
+high-availability.zookeeper.path.root: /flink
+## HA 信息存储到HDFS的目录，根据各自的Hdfs情况修改
+high-availability.zookeeper.storageDir: hdfs://localhost:9000/flink/recovery/
+
+#checkpoint config
+state.backend: rocksdb
+## checkpoint到HDFS的目录 根据各自安装的HDFS情况修改
+state.backend.fs.checkpointdir: hdfs://localhost:9000/flink/checkpoint
+## 对外checkpoint到HDFS的目录
+state.checkpoints.dir: hdfs://localhost:9000/flink/savepoint
+
+#memory config
+env.java.opts: -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+AlwaysPreTouch -server -XX:+HeapDumpOnOutOfMemoryError
+yarn.heap-cutoff-ratio: 0.2
+taskmanager.memory.off-heap: true
