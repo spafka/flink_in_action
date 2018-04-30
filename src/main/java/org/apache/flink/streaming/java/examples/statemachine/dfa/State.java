@@ -21,10 +21,10 @@ package org.apache.flink.streaming.java.examples.statemachine.dfa;
 import org.apache.flink.streaming.java.examples.statemachine.event.EventType;
 
 import java.util.Random;
-
 /**
  * The State captures the main functionality of the state machine. It represents
  * a specific state in the state machine, and holds all transitions possible
+
  * from a specific state.
  *
  * <p>The state transition diagram is as follows:

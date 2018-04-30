@@ -6,7 +6,11 @@
 
     <groupId>org.spafka.streaming</groupId>
     <artifactId>flink_in_action</artifactId>
+    <packaging>pom</packaging>
     <version>1.6</version>
+    <modules>
+        <module>flink_demo</module>
+    </modules>
 
 
     <properties>
@@ -17,21 +21,21 @@
         <scala.version>2.11</scala.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>alimaven</id>
-            <name>aliyun maven</name>
-            <url>
-                http://maven.aliyun.com/nexus/content/groups/public/
-            </url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<id>alimaven</id>-->
+    <!--<name>aliyun maven</name>-->
+    <!--<url>-->
+    <!--http://maven.aliyun.com/nexus/content/groups/public/-->
+    <!--</url>-->
+    <!--<releases>-->
+    <!--<enabled>true</enabled>-->
+    <!--</releases>-->
+    <!--<snapshots>-->
+    <!--<enabled>false</enabled>-->
+    <!--</snapshots>-->
+    <!--</repository>-->
+    <!--</repositories>-->
 
     <!--
 
@@ -66,7 +70,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-java_${scala.version}</artifactId>
+            <artifactId>flink-java</artifactId>
             <version>${flink.version}</version>
         </dependency>
         <dependency>
