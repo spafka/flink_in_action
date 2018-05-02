@@ -24,6 +24,37 @@ public class kafkaSourceTest {
         //   env.getConfig().setGlobalJobParameters(parameterTool); // make parameters available in the web interface
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
+        // 因为work都是加载不到这个jar包，甚至加载不到这个文件，所以在flink源码中加入jaas的具体文件
+        // @org.apache.flink.runtime.security.modules.JaasModule
+        // @/**
+        //################################################################################
+        //#  Licensed to the Apache Software Foundation (ASF) under one
+        //#  or more contributor license agreements.  See the NOTICE file
+        //#  distributed with this work for additional information
+        //#  regarding copyright ownership.  The ASF licenses this file
+        //#  to you under the Apache License, Version 2.0 (the
+        //#  "License"); you may not use this file except in compliance
+        //#  with the License.  You may obtain a copy of the License at
+        //#
+        //#      http://www.apache.org/licenses/LICENSE-2.0
+        //#
+        //#  Unless required by applicable law or agreed to in writing, software
+        //#  distributed under the License is distributed on an "AS IS" BASIS,
+        //#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        //#  See the License for the specific language governing permissions and
+        //# limitations under the License.
+        //################################################################################
+        //# We are using this file as an workaround for the Kafka and ZK SASL implementation
+        //# since they explicitly look for java.security.auth.login.config property
+        //# Please do not edit/delete this file - See FLINK-3929
+        //**/
+        //KafkaClient {
+        //  org.apache.kafka.common.security.plain.PlainLoginModule required
+        //  username = "admin"
+        //  password = "admin";
+        //};
+
+        // 修改runtime下的配置文件，使之生产一个默认的配置文件
         System.setProperty("java.security.auth.login.config", "/Users/spafka/Desktop/flink_in_action/src/main/resources/kafka_client_jaas.conf");
 
         Properties props = new Properties();
