@@ -10,10 +10,10 @@
     <version>1.6</version>
     <modules>
         <module>flink_demo</module>
-        <module>yahoo-streaming-benchmark</module>
-        <module>flink-streaming-demo</module>
-        <module>flink-demos/streaming-state-machine</module>
-        <module>flink-demos/timeout-monitoring</module>
+        <!--<module>yahoo-streaming-benchmark</module>-->
+        <!--<module>flink-streaming-demo</module>-->
+        <!--<module>flink-demos/streaming-state-machine</module>-->
+        <!--<module>flink-demos/timeout-monitoring</module>-->
     </modules>
 
 
