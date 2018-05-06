@@ -41,6 +41,7 @@ object Launcher {
     checkpointConf.setMinPauseBetweenCheckpoints(30000L)
     checkpointConf.setCheckpointTimeout(8000L)
     checkpointConf.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
+    //checkpointConf.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.)
 
     /* Kafka consumer */
     val consumerProps = new Properties()

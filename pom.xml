@@ -7,10 +7,14 @@
     <groupId>org.spafka.streaming</groupId>
     <artifactId>flink_in_action</artifactId>
     <packaging>pom</packaging>
-    <version>1.6</version>
+    <version>1.4.2</version>
     <modules>
         <module>flink_demo</module>
         <module>flink-exec</module>
+        <module>kafka</module>
+        <module>scala-api</module>
+        <module>java-api</module>
+        <module>data-artisans-demo</module>
         <!--<module>yahoo-streaming-benchmark</module>-->
         <!--<module>flink-streaming-demo</module>-->
         <!--<module>flink-demos/streaming-state-machine</module>-->
@@ -24,6 +28,7 @@
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <scala.version>2.11</scala.version>
+        <scala.binary.version>2.11</scala.binary.version>
     </properties>
 
     <repositories>
