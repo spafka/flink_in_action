@@ -12,4 +12,12 @@
     <artifactId>scala-api</artifactId>
 
 
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.joda/joda-convert -->
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-convert</artifactId>
+            <version>1.7</version>
+        </dependency>
+    </dependencies>
 </project>
