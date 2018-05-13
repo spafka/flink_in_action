@@ -16,6 +16,7 @@
         <module>java-api</module>
         <module>data-artisans-demo</module>
         <module>mesos</module>
+        <module>flink_in_depth</module>
         <!--<module>yahoo-streaming-benchmark</module>-->
         <!--<module>flink-streaming-demo</module>-->
         <!--<module>flink-demos/streaming-state-machine</module>-->

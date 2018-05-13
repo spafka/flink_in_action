@@ -1,1 +1,0 @@
-JobManager log files are not available in local execution mode.

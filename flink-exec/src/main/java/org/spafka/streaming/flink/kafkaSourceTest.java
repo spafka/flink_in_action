@@ -7,7 +7,7 @@ import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
-import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
@@ -65,8 +65,6 @@ public class kafkaSourceTest {
         props.put("bootstrap.servers", "localhost:9092");
         props.put("client.id", "flinkKafkaSource");
         props.put("group.id", "flink");
-        props.put("key.serializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
 
         // security
         props.put("security.protocol", "SASL_PLAINTEXT");
@@ -80,7 +78,7 @@ public class kafkaSourceTest {
         );
 
         kafkaConsumer010.setStartFromEarliest();
-        DataStream<String> input = env.addSource(kafkaConsumer010);
+        DataStreamSource<String> input = env.addSource(kafkaConsumer010, "kafka_ev");
 
 
         input.map(new MapFunction<String, Object>() {
