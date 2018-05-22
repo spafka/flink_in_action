@@ -1,138 +1,91 @@
-# Apache Flink
+## flink on yarn部署
 
-Apache Flink is an open source stream processing framework with powerful stream- and batch-processing capabilities.
+flink on yarn需要的组件与版本如下
+1. Zookeeper 3.4.9 用于做Flink的JobManager的HA服务
+2. hadoop 2.6.5 搭建HDFS和Yarn
+3. flink 1.4.2版本（scala 2.11）
 
-Learn more about Flink at [http://flink.apache.org/](http://flink.apache.org/)
+Zookeeper, HDFS 和 Yarn 的组件的安装可以参照网上的教程。
 
+在zookeeper，HDFS 和Yarn的组件的安装好的前提下，在客户机上提交Flink任务，具体流程如下：
 
-### Features
-
-* A streaming-first runtime that supports both batch processing and data streaming programs
-
-* Elegant and fluent APIs in Java and Scala
-
-* A runtime that supports very high throughput and low event latency at the same time
-
-* Support for *event time* and *out-of-order* processing in the DataStream API, based on the *Dataflow Model*
-
-* Flexible windowing (time, count, sessions, custom triggers) across different time semantics (event time, processing time)
-
-* Fault-tolerance with *exactly-once* processing guarantees
-
-* Natural back-pressure in streaming programs
-
-* Libraries for Graph processing (batch), Machine Learning (batch), and Complex Event Processing (streaming)
-
-* Built-in support for iterative programs (BSP) in the DataSet (batch) API
-
-* Custom memory management for efficient and robust switching between in-memory and out-of-core data processing algorithms
-
-* Compatibility layers for Apache Hadoop MapReduce and Apache Storm
-
-* Integration with YARN, HDFS, HBase, and other components of the Apache Hadoop ecosystem
-
-
-### Streaming Example
-```scala
-case class WordWithCount(word: String, count: Long)
-
-val text = env.socketTextStream(host, port, '\n')
-
-val windowCounts = text.flatMap { w => w.split("\\s") }
-  .map { w => WordWithCount(w, 1) }
-  .keyBy("word")
-  .timeWindow(Time.seconds(5))
-  .sum("count")
-
-windowCounts.print()
+- 在启动Yarn-Session 之前， 设置好HADOOP_HOME,YARN_CONF_DIR ， HADOOP_CONF_DIR环境变量中三者的一个。如下所示， 根据具体的hadoop 路径来设置
+```command
+   $ export HADOOP_HOME=/usr/local/hadoop-current
 ```
+- 配置flink 目录下的flink-conf.yaml, 如下所示
+```yaml
+jobmanager.rpc.address: localhost
+jobmanager.rpc.port: 6123
+jobmanager.heap.mb: 256
+taskmanager.heap.mb: 512
+taskmanager.numberOfTaskSlots: 1
+taskmanager.memory.preallocate: false
+parallelism.default: 1
+jobmanager.web.port: 8081
 
-### Batch Example
-```scala
-case class WordWithCount(word: String, count: Long)
+# yarn
+yarn.maximum-failed-containers: 99999
 
-val text = env.readTextFile(path)
+#akka config
+akka.watch.heartbeat.interval: 5 s
+akka.watch.heartbeat.pause: 20 s
+akka.ask.timeout: 60 s
+akka.framesize: 20971520b
 
-val counts = text.flatMap { w => w.split("\\s") }
-  .map { w => WordWithCount(w, 1) }
-  .groupBy("word")
-  .sum("count")
+#high-avaliability
+high-availability: zookeeper
+## 根据安装的zookeeper信息填写
+high-availability.zookeeper.quorum: 10.141.61.226:2181,10.141.53.244:2181,10.141.18.219:2181
+high-availability.zookeeper.path.root: /flink
+## HA 信息存储到HDFS的目录，根据各自的Hdfs情况修改
+high-availability.zookeeper.storageDir: hdfs:///flink/recovery/
 
-counts.writeAsCsv(outputPath)
-```
+#checkpoint config
+state.backend: rocksdb
+## checkpoint到HDFS的目录 根据各自安装的HDFS情况修改
+state.backend.fs.checkpointdir: hdfs:///flink/checkpoint
+## 对外checkpoint到HDFS的目录
+state.checkpoints.dir: hdfs:///flink/savepoint
 
-
-
-## Building Apache Flink from Source
-
-Prerequisites for building Flink:
-
-* Unix-like environment (We use Linux, Mac OS X, Cygwin)
-* git
-* Maven (we recommend version 3.2.5)
-* Java 8
+#memory config
+env.java.opts: -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+AlwaysPreTouch -server -XX:+HeapDumpOnOutOfMemoryError
+yarn.heap-cutoff-ratio: 0.2
+taskmanager.memory.off-heap: true
 
 ```
-git clone https://github.com/apache/flink.git
-cd flink
-mvn clean package -DskipTests # this will take up to 10 minutes
+- 提交Yarn-Session，切换到flink的bin 目录下,提交命令如下
+```command
+   $ bin/yarn-session.sh -n 2 -s 6 -jm 3072 -tm 6144 -nm test -d
 ```
+启动yarn-session的参数解释如下
 
-Flink is now installed in `build-target`
+参数 | 参数解释 |设置推荐
+---|---|---
+-n(--container) | taskmanager的数量 |
+-s(--slots)| 用启动应用所需的slot数量/ -s 的值向上取整，有时可以多一些taskmanager，做冗余 每个taskmanager的slot数量，默认一个slot一个core，默认每个taskmanager的slot的个数为1 | 6～10
+-jm | jobmanager的内存（单位MB)| 3072
+-tm | 每个taskmanager的内存（单位MB)| 根据core 与内存的比例来设置，-s的值＊ （core与内存的比）来算
+-nm | yarn 的appName(现在yarn的ui上的名字)｜
+-d |后台执行|
 
-*NOTE: Maven 3.3.x can build Flink, but will not properly shade away certain dependencies. Maven 3.0.3 creates the libraries properly.
-To build unit tests with Java 8, use Java 8u51 or above to prevent failures in unit tests that use the PowerMock runner.*
+- 提交yarn－session 后，可以在yarn的ui上看到一个应用（应用有一个appId）, 切换到flink的bin目录下，提交flink 应用。命令如下
+```command
+ $ ./flink -run file:///home/yarn/test.jar -a 1 -p 12 -yid appId -nm flink-test -d
+```
+启动flink 应用的参数解释如下
 
-## Developing Flink
+参数 | 参数解释
+---|---
+-j | 运行flink 应用的jar所在的目录
+-a | 运行flink 应用的主方法的参数
+-p | 运行flink应用的并行度
+-c | 运行flink应用的主类, 可以通过在打包设置主类
+-nm | flink 应用名字，在flink-ui 上面展示
+-d | 后台执行
+--fromsavepoint| flink 应用启动的状态恢复点
 
-The Flink committers use IntelliJ IDEA to develop the Flink codebase.
-We recommend IntelliJ IDEA for developing projects that involve Scala code.
+- 启动flink应用成功，即可在yarn ui 点击对应应用的ApplicationMaster链接,既可以查看flink-ui ，并查看flink 应用运行情况。
 
-Minimal requirements for an IDE are:
-* Support for Java and Scala (also mixed projects)
-* Support for Maven with Java and Scala
+注：在安装部署遇到任何问题，可以在小象问答，微信群以及私聊提出，我们一般会在晚上作答（由于白天要上班，作答不及时请谅解。）
 
-
-### IntelliJ IDEA
-
-The IntelliJ IDE supports Maven out of the box and offers a plugin for Scala development.
-
-* IntelliJ download: [https://www.jetbrains.com/idea/](https://www.jetbrains.com/idea/)
-* IntelliJ Scala Plugin: [http://plugins.jetbrains.com/plugin/?id=1347](http://plugins.jetbrains.com/plugin/?id=1347)
-
-Check out our [Setting up IntelliJ](https://github.com/apache/flink/blob/master/docs/internals/ide_setup.md#intellij-idea) guide for details.
-
-### Eclipse Scala IDE
-
-**NOTE:** From our experience, this setup does not work with Flink
-due to deficiencies of the old Eclipse version bundled with Scala IDE 3.0.3 or
-due to version incompatibilities with the bundled Scala version in Scala IDE 4.4.1.
-
-**We recommend to use IntelliJ instead (see above)**
-
-## Support
-
-Don’t hesitate to ask!
-
-Contact the developers and community on the [mailing lists](http://flink.apache.org/community.html#mailing-lists) if you need any help.
-
-[Open an issue](https://issues.apache.org/jira/browse/FLINK) if you found a bug in Flink.
-
-
-## Documentation
-
-The documentation of Apache Flink is located on the website: [http://flink.apache.org](http://flink.apache.org)
-or in the `docs/` directory of the source code.
-
-
-## Fork and Contribute
-
-This is an active open-source project. We are always open to people who want to use the system or contribute to it.
-Contact us if you are looking for implementation tasks that fit your skills.
-This article describes [how to contribute to Apache Flink](http://flink.apache.org/how-to-contribute.html).
-
-
-## About
-
-Apache Flink is an open source project of The Apache Software Foundation (ASF).
-The Apache Flink project originated from the [Stratosphere](http://stratosphere.eu) research project.
