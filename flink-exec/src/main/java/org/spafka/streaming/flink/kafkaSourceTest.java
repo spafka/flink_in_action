@@ -22,13 +22,12 @@ public class kafkaSourceTest {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         //env.getConfig().disableSysoutLogging();
         env.getConfig().setRestartStrategy(RestartStrategies.fallBackRestart());
-        env.enableCheckpointing(5000);// create a checkpoint every 5 seconds
+        env.enableCheckpointing(60000);// create a checkpoint every 5 seconds
         //   env.getConfig().setGlobalJobParameters(parameterTool); // make parameters available in the web interface
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
 
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-        // 因为work都是加载不到这个jar包，甚至加载不到这个文件，所以在flink源码中加入jaas的具体文件
         // @org.apache.flink.runtime.security.modules.JaasModule
         // @/**
         //################################################################################
@@ -70,16 +69,13 @@ public class kafkaSourceTest {
         props.put("security.protocol", "SASL_PLAINTEXT");
         props.put("sasl.mechanism", "PLAIN");
 
-
         FlinkKafkaConsumer010<String> kafkaConsumer010 = new FlinkKafkaConsumer010<>(
                 "testGo",
                 new SimpleStringSchema(), props
-
         );
 
         kafkaConsumer010.setStartFromEarliest();
         DataStreamSource<String> input = env.addSource(kafkaConsumer010, "kafka_ev");
-
 
         input.map(new MapFunction<String, Object>() {
             @Override
@@ -89,7 +85,7 @@ public class kafkaSourceTest {
             }
         });
 
-        env.execute();
+        env.execute("test");
 
 
     }
