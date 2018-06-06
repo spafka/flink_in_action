@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @Slf4j
-public class TumplingWindowTest {
+public class TumplingTimeWindowTest {
 
     public static void main(String[] args) throws Exception {
 
