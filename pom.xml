@@ -16,6 +16,7 @@
         <module>data-artisans-demo</module>
         <module>mesos</module>
         <module>flink_in_depth</module>
+        <module>flink-common</module>
     </modules>
 
 

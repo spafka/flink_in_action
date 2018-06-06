@@ -11,5 +11,12 @@
 
     <artifactId>flink-exec</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.spafka.streaming</groupId>
+            <artifactId>flink-common</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+    </dependencies>
 
 </project>

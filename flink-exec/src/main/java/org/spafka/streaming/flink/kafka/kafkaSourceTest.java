@@ -1,4 +1,4 @@
-package org.spafka.streaming.flink;
+package org.spafka.streaming.flink.kafka;
 
 
 import lombok.extern.slf4j.Slf4j;
