@@ -70,10 +70,8 @@ public class TumplingCountWindowTest {
             }
         });
 
-
         flink.execute("windowTest");
 
     }
-
 
 }
