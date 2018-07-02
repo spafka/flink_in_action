@@ -9,12 +9,7 @@
     <packaging>pom</packaging>
     <version>1.4.2</version>
     <modules>
-        <module>flink-exec</module>
-        <module>kafka</module>
-        <module>scala-api</module>
-        <module>java-api</module>
         <module>data-artisans-demo</module>
-        <module>mesos</module>
         <module>flink_in_depth</module>
         <module>flink-common</module>
     </modules>
