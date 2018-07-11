@@ -12,7 +12,6 @@
         <module>data-artisans-demo</module>
         <module>flink_in_depth</module>
         <module>flink-common</module>
-        <module>jvm_in_depth</module>
     </modules>
 
     Error:scalac: Output path D:\spafka\flink_in_action\data-artisans-demo\target\classes is shared between: Module 'data-artisans-demo' production, Module 'flink-examples-batch_2.11' production, Module 'flink-examples-streaming_2.11' production, Module 'flink-examples-table_2.11' production, Module 'streaming-state-demo' production
