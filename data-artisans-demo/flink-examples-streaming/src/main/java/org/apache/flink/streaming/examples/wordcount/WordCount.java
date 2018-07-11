@@ -18,6 +18,7 @@
 package org.apache.flink.streaming.examples.wordcount;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -75,7 +76,13 @@ public class WordCount {
                 // split up the lines in pairs (2-tuples) containing: (word,1)
                 text.flatMap(new Tokenizer())
                         // group by the tuple field "0" and sum up tuple field "1"
-                        .keyBy(0).sum(1);
+                        .keyBy(1)
+                        .reduce(new ReduceFunction<Tuple2<String, Integer>>() {
+                            @Override
+                            public Tuple2<String, Integer> reduce(Tuple2<String, Integer> value1, Tuple2<String, Integer> value2) {
+                                return new Tuple2<>(value1.f0, value1.f1 + value2.f1);
+                            }
+                        });
 
         // emit result
         if (params.has("output")) {
@@ -115,5 +122,4 @@ public class WordCount {
             }
         }
     }
-
 }

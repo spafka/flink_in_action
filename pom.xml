@@ -14,9 +14,6 @@
         <module>flink-common</module>
     </modules>
 
-    Error:scalac: Output path D:\spafka\flink_in_action\data-artisans-demo\target\classes is shared between: Module 'data-artisans-demo' production, Module 'flink-examples-batch_2.11' production, Module 'flink-examples-streaming_2.11' production, Module 'flink-examples-table_2.11' production, Module 'streaming-state-demo' production
-    Please configure separate output paths to proceed with the compilation.
-    TIP: you can use Project Artifacts to combine compiled classes if needed.
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <flink.version>1.4.2</flink.version>
