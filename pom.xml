@@ -9,10 +9,6 @@
     <packaging>pom</packaging>
     <version>1.4.2</version>
     <modules>
-        <module>flink-exec</module>
-        <module>kafka</module>
-        <module>scala-api</module>
-        <module>java-api</module>
         <module>data-artisans-demo</module>
         <module>mesos</module>
         <module>flink_in_depth</module>
@@ -131,7 +127,12 @@
             <scope>provided</scope>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime-web_${scala.version}</artifactId>
+            <version>${flink.version}</version>
+            <scope>${flink.runtime.scope}</scope>
+        </dependency>
     </dependencies>
 
     <profiles>

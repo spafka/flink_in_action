@@ -1,30 +1,32 @@
 package org.spafka
 
+import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks
+import org.apache.flink.streaming.api.scala.function.ProcessWindowFunction
 import org.apache.flink.streaming.api.watermark.Watermark
 
-/**
-  * This generator generates watermarks assuming that elements come out of order to a certain degree only.
-  * The latest elements for a certain timestamp t will arrive at most n milliseconds after the earliest
-  * elements for timestamp t.
-  */
-class BoundedOutOfOrdernessGenerator extends AssignerWithPeriodicWatermarks[MyEvent] {
-
-  val maxOutOfOrderness: Long = 3500L // 3.5 seconds
-
-  var currentMaxTimestamp: Long = _
-
-  override def extractTimestamp(element: MyEvent, previousElementTimestamp: Long): Long = {
-    val timestamp = element.createTime
-    currentMaxTimestamp = Math.max(timestamp, currentMaxTimestamp)
-    timestamp;
-  }
-
-  override def getCurrentWatermark(): Watermark = {
-    // return the watermark as current highest timestamp minus the out-of-orderness bound
-    new Watermark(currentMaxTimestamp - maxOutOfOrderness);
-  }
-}
+///**
+//  * This generator generates watermarks assuming that elements come out of order to a certain degree only.
+//  * The latest elements for a certain timestamp t will arrive at most n milliseconds after the earliest
+//  * elements for timestamp t.
+//  */
+//class BoundedOutOfOrdernessGenerator extends AssignerWithPeriodicWatermarks[MyEvent] {
+//
+//  val maxOutOfOrderness: Long = 3500L // 3.5 seconds
+//
+//  var currentMaxTimestamp: Long = _
+//
+//  override def extractTimestamp(element: MyEvent, previousElementTimestamp: Long): Long = {
+//    val timestamp = element.createTime
+//    currentMaxTimestamp = Math.max(timestamp, currentMaxTimestamp)
+//    timestamp;
+//  }
+//
+//  override def getCurrentWatermark(): Watermark = {
+//    // return the watermark as current highest timestamp minus the out-of-orderness bound
+//    new Watermark(currentMaxTimestamp - maxOutOfOrderness);
+//  }
+//}
 
 case class MyEvent(createTime: Long)
 
@@ -53,72 +55,36 @@ object WatermarkTest {
     val hostName = args(0)
     val port = args(1).toInt
 
-    val env = StreamExecutionEnvironment.getExecutionEnvironment
-    env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime)
+    val configuration = new Configuration
+    configuration.setInteger("web.port", 8081)
+    val env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration)
+
+    env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
     val input = env.socketTextStream(hostName, port)
 
-    val inputMap = input.map(f => {
-      val arr = f.split(" ")
+    input.map(f => {
+      val arr = f.split("\\W")
       val code = arr(0)
       val time = arr(1).toLong
       (code, time)
-    })
+    }).assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[(String, Long)](Time.seconds(1)) {
+      override def extractTimestamp(element: (String, Long)): Long = {
 
-    val watermark = inputMap.keyBy(1).assignTimestampsAndWatermarks(new AssignerWithPeriodicWatermarks[(String, Long)] {
-
-      var currentMaxTimestamp = 0L
-      val maxOutOfOrderness = 0L //最大允许的乱序时间是10s
-
-      var watermark: Watermark = null
-
-      val format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-
-      override def getCurrentWatermark: Watermark = {
-        watermark = new Watermark(currentMaxTimestamp - maxOutOfOrderness)
-
-        // println(Thread.currentThread().getName + watermark)
-        watermark
+        println(element)
+        element._2
       }
-
-      override def extractTimestamp(t: (String, Long), l: Long): Long = {
-        val timestamp = t._2
-        currentMaxTimestamp = Math.max(timestamp, currentMaxTimestamp)
-        System.err.println(Thread.currentThread().getName + "data :" + t._1 + "," + t._2 + "| ts: " + format.format(t._2) + "," + "currentMaxTimestamp" + " " + currentMaxTimestamp + "," + watermark)
-        timestamp
-      }
-    })
-
-    //    val watermark= inputMap.assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[(String, Long)](Time.seconds(10)){
-    //      /**
-    //        * Extracts the timestamp from the given element.
-    //        *
-    //        * @param element The element that the timestamp is extracted from.
-    //        * @return The new timestamp.
-    //        */
-    //      override def extractTimestamp(element: (String, Long)): Long = {
-    //        element._2
-    //      }
-    //    })
-
-    val window = watermark
-      .keyBy(_._1)
+    }).keyBy(_._1)
       .window(TumblingEventTimeWindows.of(Time.seconds(1)))
-      .apply(new WindowFunctionTest)
+      .process(new ProcessWindowFunction[(String, Long), String, String, TimeWindow] {
+        override def process(key: String, context: Context, elements: Iterable[(String, Long)], out: Collector[String]): Unit = {
 
-    window.print()
+
+         println(s"${context.currentWatermark}, ${elements.toList}")
+        }
+      })
 
     env.execute()
   }
 
-  class WindowFunctionTest extends WindowFunction[(String, Long), (String, Int, String, String, String, String), String, TimeWindow] {
-
-    override def apply(key: String, window: TimeWindow, input: Iterable[(String, Long)], out: Collector[(String, Int, String, String, String, String)]): Unit = {
-
-      print("windowing")
-      val list = input.toList.sortBy(_._2)
-      val format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-      out.collect(key, input.size, format.format(list.head._2), format.format(list.last._2), format.format(window.getStart), format.format(window.getEnd))
-    }
-  }
 }
