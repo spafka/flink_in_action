@@ -13,6 +13,7 @@
         <module>mesos</module>
         <module>flink_in_depth</module>
         <module>flink-common</module>
+        <module>netty</module>
     </modules>
 
     <properties>
