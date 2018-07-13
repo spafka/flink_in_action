@@ -26,7 +26,6 @@ under the License.
         <groupId>org.spafka.streaming</groupId>
         <artifactId>flink_in_action</artifactId>
         <version>1.4.2</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>data-artisans-demo</artifactId>

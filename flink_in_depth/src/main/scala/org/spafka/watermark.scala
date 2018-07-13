@@ -1,9 +1,7 @@
 package org.spafka
 
 import org.apache.flink.configuration.Configuration
-import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks
 import org.apache.flink.streaming.api.scala.function.ProcessWindowFunction
-import org.apache.flink.streaming.api.watermark.Watermark
 
 ///**
 //  * This generator generates watermarks assuming that elements come out of order to a certain degree only.
@@ -31,13 +29,8 @@ import org.apache.flink.streaming.api.watermark.Watermark
 case class MyEvent(createTime: Long)
 
 
-import java.text.SimpleDateFormat
-
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks
-import org.apache.flink.streaming.api.scala.function.WindowFunction
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
-import org.apache.flink.streaming.api.watermark.Watermark
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
@@ -68,7 +61,7 @@ object WatermarkTest {
       val code = arr(0)
       val time = arr(1).toLong
       (code, time)
-    }).assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[(String, Long)](Time.seconds(1)) {
+    }).assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[(String, Long)](Time.seconds(0)) {
       override def extractTimestamp(element: (String, Long)): Long = {
 
         println(element)
