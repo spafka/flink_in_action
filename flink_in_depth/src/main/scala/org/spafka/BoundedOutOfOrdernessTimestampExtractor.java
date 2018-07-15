@@ -3,6 +3,7 @@ package org.spafka;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.joda.time.DateTime;
 
 /**
  * This is a {@link AssignerWithPeriodicWatermarks} used to emit Watermarks that lag behind the element with
@@ -54,6 +55,7 @@ public abstract class BoundedOutOfOrdernessTimestampExtractor<T> implements Assi
         // this guarantees that the watermark never goes backwards.
         long potentialWM = currentMaxTimestamp - maxOutOfOrderness;
         if (potentialWM >= lastEmittedWatermark) {
+          //  System.err.println(String.format("currentTime=%s,currentMaxTimestamp=%s,lastEmittedWatermark=%s,potentialWM=%s",new DateTime().toString("HH:mm:ss.SSS"),currentMaxTimestamp,lastEmittedWatermark,potentialWM));
             lastEmittedWatermark = potentialWM;
         }
         return new Watermark(lastEmittedWatermark);

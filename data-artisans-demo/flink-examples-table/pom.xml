@@ -26,7 +26,6 @@ under the License.
         <artifactId>data-artisans-demo</artifactId>
         <groupId>org.spafka.streaming</groupId>
         <version>1.4.2</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <name>flink-examples-table</name>
