@@ -32,7 +32,7 @@ public class InboundHandlerA extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        System.out.println("InboundHandlerA " + ((ByteBuf)msg).toString(Charset.defaultCharset()));
+        System.out.println("InboundHandlerA recived " + ((ByteBuf)msg).toString(Charset.defaultCharset()));
 
         // 向下传播时间
         ctx.fireChannelRead(msg);

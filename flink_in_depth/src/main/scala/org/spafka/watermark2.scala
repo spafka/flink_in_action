@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import org.apache.flink.util.Collector
 
 
-object WatermarkTest {
+object WatermarkTest2 {
 
   def main(args: Array[String]): Unit = {
 

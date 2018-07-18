@@ -16,6 +16,7 @@
 package io.netty.example.echo;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -31,9 +32,9 @@ public class InboundHandlerC extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        System.out.println("InboundHandlerC " + ((ByteBuf)msg).toString(Charset.defaultCharset()));
-       // ctx.writeAndFlush(msg);
-                //.addListener(ChannelFutureListener.CLOSE);  //写回客户端
+        System.out.println("InboundHandlerC recived " + ((ByteBuf) msg).toString(Charset.defaultCharset()));
+        ctx.writeAndFlush(msg)
+                .addListener(ChannelFutureListener.CLOSE);  //写回客户端
     }
 
     @Override

@@ -31,7 +31,7 @@ public class InboundHandlerB extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        System.out.println("InboundHandlerB "+ ((ByteBuf)msg).toString(Charset.defaultCharset()));
+        System.out.println("InboundHandlerB recived "+ ((ByteBuf)msg).toString(Charset.defaultCharset()));
         ctx.fireChannelRead(msg);
                 //.addListener(ChannelFutureListener.CLOSE);  //写回客户端
     }

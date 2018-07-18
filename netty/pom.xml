@@ -12,12 +12,19 @@
     <artifactId>netty</artifactId>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+         <!--https://mvnrepository.com/artifact/io.netty/netty-all-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.27.Final</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jctools/jctools-core -->
+        <dependency>
+            <groupId>org.jctools</groupId>
+            <artifactId>jctools-core</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
