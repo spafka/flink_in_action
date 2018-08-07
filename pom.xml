@@ -13,6 +13,7 @@
         <module>mesos</module>
         <module>flink_in_depth</module>
         <module>netty</module>
+        <module>build-in-cluster</module>
     </modules>
 
     <properties>
