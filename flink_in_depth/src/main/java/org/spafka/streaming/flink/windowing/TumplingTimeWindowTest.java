@@ -66,7 +66,9 @@ public class TumplingTimeWindowTest {
                                  TimeWindow window = context.window();
                                  ArrayList<Tuple4<Long, Integer, Integer, Date>> lists = Lists.newArrayList(elements);
 
-                                 log.error("processtime= {},window= {},key= {}, elements= {}", new DateTime(), window, key.getField(0), lists);
+
+
+       log.error("processtime= {},window= {},key= {}, elements= {}", new DateTime(), window, key.getField(0), lists);
                              }
 
                          }

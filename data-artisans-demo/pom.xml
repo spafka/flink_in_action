@@ -35,7 +35,6 @@ under the License.
         <module>flink-examples-batch</module>
         <module>flink-examples-streaming</module>
         <module>flink-examples-table</module>
-        <module>streaming-state-machine</module>
     </modules>
 
 
