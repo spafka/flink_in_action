@@ -31,7 +31,7 @@ public class Producer extends Thread {
 
     public Producer(String topic, Boolean isAsync) {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost" + ":" + 9092);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafkazoo1" + ":" + 9092);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "DemoProducer");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
@@ -43,7 +43,7 @@ public class Producer extends Thread {
 
     public void run() {
         Long messageNo = 1L;
-        while (true && messageNo <= 1000000) {
+        while (true && messageNo <= 1000) {
             try {
                 producer.send(new ProducerRecord<>(topic,
                         messageNo));
@@ -59,7 +59,7 @@ public class Producer extends Thread {
 
     public static void main(String[] args) throws InterruptedException {
 
-        Producer producer = new Producer("test", false);
+        Producer producer = new Producer("spafka", false);
         new Thread(producer).start();
 
         producer.join();
