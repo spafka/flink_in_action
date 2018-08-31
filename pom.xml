@@ -14,6 +14,7 @@
         <module>flink_in_depth</module>
         <module>netty</module>
         <module>build-in-cluster</module>
+        <module>bench-mark</module>
     </modules>
 
     <properties>
@@ -137,6 +138,17 @@
             <version>${flink.version}</version>
             <scope>${flink.runtime.scope}</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.46</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+
     </dependencies>
 
     <!-- We use the maven-assembly plugin to create a fat jar that contains all dependencies
