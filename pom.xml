@@ -15,6 +15,7 @@
         <module>netty</module>
         <module>build-in-cluster</module>
         <module>bench-mark</module>
+        <module>flink-dist</module>
     </modules>
 
     <properties>
@@ -338,6 +339,75 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>bin</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assemblies/bin.xml</descriptor>
+                            </descriptors>
+                            <finalName>flink-${project.version}-bin</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <!--<execution>-->
+                        <!--<id>opt</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<descriptors>-->
+                                <!--<descriptor>src/main/assemblies/opt.xml</descriptor>-->
+                            <!--</descriptors>-->
+                            <!--<finalName>flink-${project.version}-bin</finalName>-->
+                            <!--<appendAssemblyId>false</appendAssemblyId>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.4</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <skipPoms>false</skipPoms>
+                    <generateGitPropertiesFilename>src/main/flink-bin/.version.properties</generateGitPropertiesFilename>
+                    <gitDescribe>
+                        <!-- don't generate the describe property -->
+                        <skip>true</skip>
+                    </gitDescribe>
+                </configuration>
             </plugin>
         </plugins>
     </build>

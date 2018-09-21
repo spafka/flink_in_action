@@ -21,10 +21,12 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Collections;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 public class Consumer extends ShutdownableThread {
     private final KafkaConsumer<Integer, String> consumer;
@@ -39,7 +41,7 @@ public class Consumer extends ShutdownableThread {
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer");
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
         consumer = new KafkaConsumer<>(props);
         this.topic = topic;
@@ -47,7 +49,7 @@ public class Consumer extends ShutdownableThread {
 
     @Override
     public void doWork() {
-        consumer.subscribe(Collections.singletonList(this.topic));
+        consumer.subscribe(Pattern.compile("spafka.*"));
         ConsumerRecords<Integer, String> records = consumer.poll(1000);
         for (ConsumerRecord<Integer, String> record : records) {
             System.out.println("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.partition() + ":" + record.offset());

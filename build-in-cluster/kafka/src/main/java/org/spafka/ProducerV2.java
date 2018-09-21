@@ -20,17 +20,16 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.IntegerSerializer;
-import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
-public class Producer extends Thread {
+public class ProducerV2 extends Thread {
     private final KafkaProducer<Integer, String> producer;
     private final String topic;
 
 
-    public Producer(String topic) {
+    public ProducerV2(String topic) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost" + ":" + 9092);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "test");
@@ -58,7 +57,7 @@ public class Producer extends Thread {
 
     public static void main(String[] args) throws InterruptedException {
 
-        Producer producer = new Producer("spafka");
+        ProducerV2 producer = new ProducerV2("spafkaV2");
         new Thread(producer).start();
         producer.join();
 

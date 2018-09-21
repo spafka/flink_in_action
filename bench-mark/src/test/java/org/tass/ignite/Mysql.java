@@ -25,10 +25,10 @@ public class Mysql {
     public void init() throws SQLException {
         dataSource = new DruidDataSource();
         dataSource.setUrl("jdbc:mysql://192.168.30.104:3306/gb32960data?useSSL=false");
-       // dataSource.setUrl("jdbc:mysql://localhost:3307/gb32960data?useSSL=false");
+      //  dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
         dataSource.setPassword("kevin115");
         dataSource.setUsername("root");
-        // dataSource.setPassword("root");
+      //  dataSource.setPassword("root");
 
         connection = dataSource.getConnection();
         IntStream.range(1,7).forEach(x->{
