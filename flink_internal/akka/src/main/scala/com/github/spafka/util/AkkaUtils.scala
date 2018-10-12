@@ -8,11 +8,6 @@ import akka.actor.{ActorSystem, Address, ExtendedActorSystem, Extension, Extensi
 import com.typesafe.config.{Config, ConfigFactory}
 import org.slf4j.{Logger, LoggerFactory}
 
-/** [[akka.actor.ActorSystem]] [[Extension]] used to obtain the [[Address]] on which the
-  * given ActorSystem is listening.
-  *
-  * @param system
-  */
 class RemoteAddressExtensionImplementation(system: ExtendedActorSystem) extends Extension {
   def address: Address = system.provider.getDefaultAddress
 }
@@ -21,7 +16,6 @@ object RemoteAddressExtension extends ExtensionKey[RemoteAddressExtensionImpleme
 
 
 object AkkaUtils {
-
 
   def getAkkaConfig(bindAddress: String,port:Int): Config = {
     val config =
@@ -70,16 +64,6 @@ object AkkaUtils {
   }
 
 
-  /**
-    * Starts an Actor System at a specific port.
-    *
-    * @param configuration    The Flink configuration.
-    * @param listeningAddress The address to listen at.
-    * @param listeningPort    The port to listen at.
-    * @param logger           the logger to output log information.
-    * @return The ActorSystem which has been started.
-    * @throws Exception
-    */
   @throws[Exception]
   def startActorSystem(configuration: util.HashMap[String, String], listeningAddress: String, listeningPort: Int, logger: Logger): ActorSystem = {
 
@@ -106,6 +90,5 @@ object AkkaUtils {
     val address = AkkaUtils.getAddress(actorSystem)
     print(address)
   }
-
 
 }
