@@ -25,6 +25,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <zk.version>3.4.10</zk.version>
         <kafka.version>2.0.0</kafka.version>
+        <akka.version>2.4.20</akka.version>
     </properties>
 
     <repositories>
@@ -85,7 +86,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
-                <artifactId>flink-connector-kafka-0.10_${scala.binary.version}</artifactId>
+                <artifactId>flink-connector-kafka-0.11_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
