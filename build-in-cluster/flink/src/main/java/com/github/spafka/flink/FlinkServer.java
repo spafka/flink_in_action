@@ -16,7 +16,7 @@ import java.io.IOException;
 
 
 @Slf4j
-public class Main {
+public class FlinkServer {
 
 
     public static final String FLINK_ENV = "flink.env";

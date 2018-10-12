@@ -10,12 +10,10 @@
     <version>1.4.2</version>
     <modules>
         <module>data-artisans-demo</module>
-        <module>mesos</module>
-        <module>flink_in_depth</module>
-        <module>netty</module>
+        <module>flink_internal</module>
         <module>build-in-cluster</module>
         <module>bench-mark</module>
-        <module>flink-dist</module>
+        <module>flink_in_depth</module>
     </modules>
 
     <properties>
@@ -23,7 +21,7 @@
         <flink.version>1.6.1</flink.version>
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
-        <scala.version>2.11</scala.version>
+        <scala.version>2.11.12</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
         <zk.version>3.4.10</zk.version>
         <kafka.version>2.0.0</kafka.version>
@@ -45,112 +43,133 @@
         </repository>
     </repositories>
 
-
     <dependencies>
-
-        <!-- Apache Flink dependencies -->
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-scala_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-java</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-streaming-scala_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-clients_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-0.10_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-runtime_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-
-        <!-- explicitly add a standard loggin framework, as Flink does not (in the future) have
-            a hard dependency on one specific framework by default -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json4s</groupId>
-            <artifactId>json4s-native_${scala.version}</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.scalaj</groupId>
-            <artifactId>scalaj-http_${scala.version}</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.21</version>
-        </dependency>
-
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.roundeights</groupId>
-            <artifactId>hasher_${scala.version}</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-statebackend-rocksdb_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-runtime-web_${scala.version}</artifactId>
-            <version>${flink.version}</version>
-            <scope>${flink.runtime.scope}</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.46</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-compiler -->
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-compiler</artifactId>
+                <version>${scala.version}</version>
+            </dependency>
+
+
+            <!-- Apache Flink dependencies -->
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-scala_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-java</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-clients_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-connector-kafka-0.10_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-runtime_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-statebackend-rocksdb_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+
+            <!-- FLINK END -->
+
+            <!-- explicitly add a standard loggin framework, as Flink does not (in the future) have
+                a hard dependency on one specific framework by default -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-native_${scala.binary.version}</artifactId>
+                <version>3.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.scalaj</groupId>
+                <artifactId>scalaj-http_${scala.binary.version}</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.21</version>
+            </dependency>
+
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.9.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.roundeights</groupId>
+                <artifactId>hasher_${scala.binary.version}</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.20</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-runtime-web_${scala.binary.version}</artifactId>
+                <version>${flink.version}</version>
+                <scope>${flink.runtime.scope}</scope>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.46</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.1.10</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
 
     <!-- We use the maven-assembly plugin to create a fat jar that contains all dependencies
         except flink and its transitive dependencies. The resulting fat-jar can be executed
@@ -342,39 +361,39 @@
             </plugin>
 
 
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>bin</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/main/assemblies/bin.xml</descriptor>
-                            </descriptors>
-                            <finalName>flink-${project.version}-bin</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
+            <!--<plugin>-->
+            <!--<artifactId>maven-assembly-plugin</artifactId>-->
+            <!--<executions>-->
                     <!--<execution>-->
-                        <!--<id>opt</id>-->
+            <!--<id>bin</id>-->
                         <!--<phase>package</phase>-->
                         <!--<goals>-->
                             <!--<goal>single</goal>-->
                         <!--</goals>-->
                         <!--<configuration>-->
                             <!--<descriptors>-->
-                                <!--<descriptor>src/main/assemblies/opt.xml</descriptor>-->
+            <!--<descriptor>src/main/assemblies/bin.xml</descriptor>-->
                             <!--</descriptors>-->
                             <!--<finalName>flink-${project.version}-bin</finalName>-->
                             <!--<appendAssemblyId>false</appendAssemblyId>-->
                         <!--</configuration>-->
                     <!--</execution>-->
-                </executions>
-            </plugin>
+            <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+            <!--&lt;!&ndash;<id>opt</id>&ndash;&gt;-->
+            <!--&lt;!&ndash;<phase>package</phase>&ndash;&gt;-->
+            <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+            <!--&lt;!&ndash;<goal>single</goal>&ndash;&gt;-->
+            <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+            <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+            <!--&lt;!&ndash;<descriptors>&ndash;&gt;-->
+            <!--&lt;!&ndash;<descriptor>src/main/assemblies/opt.xml</descriptor>&ndash;&gt;-->
+            <!--&lt;!&ndash;</descriptors>&ndash;&gt;-->
+            <!--&lt;!&ndash;<finalName>flink-${project.version}-bin</finalName>&ndash;&gt;-->
+            <!--&lt;!&ndash;<appendAssemblyId>false</appendAssemblyId>&ndash;&gt;-->
+            <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+            <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+            <!--</executions>-->
+            <!--</plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -385,30 +404,30 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
-                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <skipPoms>false</skipPoms>
-                    <generateGitPropertiesFilename>src/main/flink-bin/.version.properties</generateGitPropertiesFilename>
-                    <gitDescribe>
-                        <!-- don't generate the describe property -->
-                        <skip>true</skip>
-                    </gitDescribe>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+            <!--&lt;!&ndash; Description: https://github.com/ktoso/maven-git-commit-id-plugin &ndash;&gt;-->
+            <!--<groupId>pl.project13.maven</groupId>-->
+            <!--<artifactId>git-commit-id-plugin</artifactId>-->
+            <!--<version>2.1.5</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>revision</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>-->
+            <!--<generateGitPropertiesFile>true</generateGitPropertiesFile>-->
+            <!--<failOnNoGitDirectory>false</failOnNoGitDirectory>-->
+            <!--<skipPoms>false</skipPoms>-->
+            <!--<generateGitPropertiesFilename>src/main/flink-bin/.version.properties</generateGitPropertiesFilename>-->
+            <!--<gitDescribe>-->
+            <!--&lt;!&ndash; don't generate the describe property &ndash;&gt;-->
+            <!--<skip>true</skip>-->
+            <!--</gitDescribe>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 

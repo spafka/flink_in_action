@@ -21,8 +21,6 @@ package org.apache.flink.runtime.io.network.netty;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.runtime.io.network.ConnectionID;
-import org.apache.flink.runtime.io.network.TaskEventDispatcher;
-import org.apache.flink.runtime.io.network.partition.ResultPartitionManager;
 import org.apache.flink.util.NetUtils;
 
 import org.apache.flink.shaded.netty4.io.netty.channel.ChannelHandler;
@@ -57,13 +55,21 @@ public class PartitionRequestClientFactoryTest {
 
         // Latch to synchronize on the connect call.
         final CountDownLatch syncOnConnect = new CountDownLatch(1);
-        ResultPartitionManager resultPartitionManager = new ResultPartitionManager();
-        TaskEventDispatcher taskEventDispatcher = new TaskEventDispatcher();
 
-
-        //
         final Tuple2<NettyServer, NettyClient> netty = createNettyServerAndClient(
-                new PartitionRequestProtocol(resultPartitionManager, taskEventDispatcher));
+                new NettyProtocol(null, null, true) {
+
+                    @Override
+                    public ChannelHandler[] getServerChannelHandlers() {
+                        return new ChannelHandler[0];
+                    }
+
+                    @Override
+                    public ChannelHandler[] getClientChannelHandlers() {
+                        return new ChannelHandler[] {
+                                new CountDownLatchOnConnectHandler(syncOnConnect)};
+                    }
+                });
 
         final NettyServer server = netty.f0;
         final NettyClient client = netty.f1;
@@ -83,7 +89,8 @@ public class PartitionRequestClientFactoryTest {
 
                         // This triggers a connect
                         factory.createPartitionRequestClient(serverAddress);
-                    } catch (Throwable t) {
+                    }
+                    catch (Throwable t) {
 
                         if (serverAddress != null) {
                             factory.closeOpenChannelConnections(serverAddress);
@@ -111,7 +118,8 @@ public class PartitionRequestClientFactoryTest {
 
             // Make sure that the interrupt exception is not swallowed
             assertTrue(exceptionHandler.getErrors().size() > 0);
-        } finally {
+        }
+        finally {
             if (server != null) {
                 server.shutdown();
             }
@@ -167,7 +175,8 @@ public class PartitionRequestClientFactoryTest {
             client.init(protocol, bufferPool);
 
             success = true;
-        } finally {
+        }
+        finally {
             if (!success) {
                 server.shutdown();
                 client.shutdown();

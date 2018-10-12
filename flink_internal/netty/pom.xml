@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>flink_in_action</artifactId>
+        <artifactId>flink_internal</artifactId>
         <groupId>org.spafka.streaming</groupId>
         <version>1.4.2</version>
     </parent>
@@ -12,13 +12,11 @@
     <artifactId>netty</artifactId>
 
     <dependencies>
-         <!--https://mvnrepository.com/artifact/io.netty/netty-all-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.27.Final</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jctools/jctools-core -->
         <dependency>
             <groupId>org.jctools</groupId>
             <artifactId>jctools-core</artifactId>
@@ -31,7 +29,20 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime_${scala.binary.version}</artifactId>
+        </dependency>
     </dependencies>
 
 
