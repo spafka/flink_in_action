@@ -11,5 +11,15 @@
 
     <artifactId>akka</artifactId>
 
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.typesafe.akka/akka-actor -->
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_${scala.binary.version}</artifactId>
+            <version>2.4.20</version>
+        </dependency>
+
+    </dependencies>
+
 
 </project>
