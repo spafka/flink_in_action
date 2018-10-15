@@ -23,14 +23,14 @@ public class Mysql {
     @Before
     public void init() throws SQLException {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://192.168.30.104:3306/gb32960data?useSSL=false");
-      //  dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
+        //dataSource.setUrl("jdbc:mysql://192.168.26.100:3306/gb32960data?useSSL=false");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
         dataSource.setPassword("kevin115");
         dataSource.setUsername("root");
-      //  dataSource.setPassword("root");
+        dataSource.setPassword("root");
 
         connection = dataSource.getConnection();
-        IntStream.range(1,7).forEach(x->{
+        IntStream.range(1, 11).forEach(x -> {
             try (Statement stmt = connection.createStatement()) {
                 String sql = "CREATE TABLE  if NOT exists t_gb32960CompletelyVehicle"+x+" (\n" +
                         "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
@@ -52,7 +52,7 @@ public class Mysql {
                         "  `dataTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                         "  PRIMARY KEY (`id`),\n" +
                         "  UNIQUE KEY `uid_UNIQUE` (`uid`)\n" +
-                        ") ENGINE=InnoDB AUTO_INCREMENT=9581307 DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
+                        ") ENGINE=MEMORY AUTO_INCREMENT=9581307 DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 
                 stmt.execute(sql);
             } catch (SQLException e) {
@@ -80,21 +80,22 @@ public class Mysql {
 
             @Override
             public Object apply() {
-                ExecutorService pool = Executors.newFixedThreadPool(6);
+                ExecutorService pool = Executors.newCachedThreadPool();
 
-                IntStream.range(1,7).forEach(x->{
+                IntStream.range(1, 11).forEach(x -> {
                     pool.submit(() -> {
 
                                 Timer.time(new AbstractFunction0<Object>() {
                                     @Override
                                     public Object apply() {
                                         try (Statement stmt = connection.createStatement()) {
-                                            for (int i = 0; i <= 100; i++) {
+                                            for (int i = 1; i <= 10; i++) {
                                                 // Create table based on REPLICATED template
                                                 String head = "replace   into t_gb32960CompletelyVehicle"+x+"(uid,unixtimestamp,vehicleState,chargeState,runningMode,speed,mile,totalV,totalI,soc,dcdcState,gear,insulationR,accelerationPedal,brakePedal,dataTime) values";
                                                 StringBuilder sb = new StringBuilder();
-                                                for (int j = 0; j <=1000; j++) {
-                                                    if (j == 1000) {
+                                                for (int j = 0; j <= 10000; j++) {
+                                                    if (j == 10000) {
+
                                                         sb.append(String.format("('spafka%d',123,1,1,1,1,1,1,1,1,1,1,1,1,1, CURRENT_TIMESTAMP()) ", j));
                                                     } else {
                                                         sb.append(String.format("('spafka%d',123,1,1,1,1,1,1,1,1,1,1,1,1,1, CURRENT_TIMESTAMP()), ", j));
