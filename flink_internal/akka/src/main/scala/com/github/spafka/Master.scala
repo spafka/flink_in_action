@@ -9,11 +9,16 @@ import grizzled.slf4j.Logger
 class Master(protected val map: Map[String, String]) extends Actor {
 
 
+  // fixme add more execute
   val logger = Logger(classOf[Master])
 
   override def receive: Receive = {
     case e: RigistMessage => {
       print(e)
+    }
+
+    case t:Task=>{
+      t.run
     }
   }
 

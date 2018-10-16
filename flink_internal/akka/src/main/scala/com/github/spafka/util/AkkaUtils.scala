@@ -5,7 +5,7 @@ import java.net.BindException
 
 import akka.actor.{ActorSystem, Address, ExtendedActorSystem, Extension, ExtensionKey}
 import com.typesafe.config.{Config, ConfigFactory}
-import org.slf4j.{Logger, LoggerFactory}
+import org.slf4j.Logger
 
 class RemoteAddressExtensionImplementation(system: ExtendedActorSystem) extends Extension {
   def address: Address = system.provider.getDefaultAddress

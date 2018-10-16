@@ -2,18 +2,17 @@ package com.github.spafka
 
 import java.net.InetAddress
 
-import akka.actor.{Actor, Props}
+import akka.actor.Actor
 import com.github.spafka.util.AkkaUtils
 import grizzled.slf4j.Logger
 
 
 class Slave extends Actor {
 
-
+  // fixme add more executor
   override def receive: Receive = {
 
     case e: RigistMessage => {
-
       print(e)
     }
   }
@@ -37,7 +36,14 @@ object Slave{
 
     actorSelection ! RigistMessage("localhost",null)
 
+    actorSelection ! Task(tdd = new TaskDesc {
 
+      override def run: Unit = {
+        while (true) {
+          println("task invokeing!!!! ")
+        }
+      }
+    })
 
   }
 }
