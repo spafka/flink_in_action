@@ -32,7 +32,7 @@ object Slave{
         conf.getOrElse("port", "6123").toInt,
         LOG.logger)
 
-    val actorSelection = actorSystem.actorSelection("akka.tcp://flink@CHINA-20180921R:6123/user/flink")
+    val actorSelection = actorSystem.actorSelection(s"akka.tcp://flink@${InetAddress.getLocalHost().getHostName}:6123/user/flink")
 
     actorSelection ! RigistMessage("localhost",null)
 
