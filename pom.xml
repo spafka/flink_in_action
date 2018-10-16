@@ -194,78 +194,78 @@
                         </goals>
                         <configuration>
                             <artifactSet>
-                                <excludes>
-                                    <!-- This list contains all dependencies of flink-dist
-                                    Everything else will be packaged into the fat-jar
-                                    -->
-                                    <exclude>org.apache.flink:flink-annotations</exclude>
-                                    <exclude>org.apache.flink:flink-shaded-hadoop2</exclude>
-                                    <exclude>org.apache.flink:flink-shaded-curator-recipes</exclude>
-                                    <exclude>org.apache.flink:flink-core</exclude>
-                                    <exclude>org.apache.flink:flink-java</exclude>
-                                    <exclude>org.apache.flink:flink-scala_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-runtime_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-optimizer_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-clients_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-avro_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-examples-batch_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-examples-streaming_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-streaming-java_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-streaming-scala_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-scala-shell_${scala.version}</exclude>
-                                    <exclude>org.apache.flink:flink-python</exclude>
-                                    <exclude>org.apache.flink:flink-metrics-core</exclude>
-                                    <exclude>org.apache.flink:flink-metrics-jmx</exclude>
-                                    <exclude>org.apache.flink:flink-statebackend-rocksdb_${scala.version}</exclude>
+                                <!--<excludes>-->
+                                <!--&lt;!&ndash; This list contains all dependencies of flink-dist-->
+                                <!--Everything else will be packaged into the fat-jar-->
+                                <!--&ndash;&gt;-->
+                                <!--<exclude>org.apache.flink:flink-annotations</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-shaded-hadoop2</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-shaded-curator-recipes</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-core</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-java</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-scala_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-runtime_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-optimizer_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-clients_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-avro_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-examples-batch_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-examples-streaming_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-streaming-java_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-streaming-scala_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-scala-shell_${scala.version}</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-python</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-metrics-core</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-metrics-jmx</exclude>-->
+                                <!--<exclude>org.apache.flink:flink-statebackend-rocksdb_${scala.version}</exclude>-->
 
-                                    <!-- Also exclude very big transitive dependencies of Flink
+                                <!--&lt;!&ndash; Also exclude very big transitive dependencies of Flink-->
 
-                                    WARNING: You have to remove these excludes if your code relies on other
-                                    versions of these dependencies.
+                                <!--WARNING: You have to remove these excludes if your code relies on other-->
+                                <!--versions of these dependencies.-->
 
-                                    -->
+                                <!--&ndash;&gt;-->
 
-                                    <exclude>log4j:log4j</exclude>
-                                    <exclude>org.scala-lang:scala-library</exclude>
-                                    <exclude>org.scala-lang:scala-compiler</exclude>
-                                    <exclude>org.scala-lang:scala-reflect</exclude>
-                                    <exclude>com.data-artisans:flakka-actor_*</exclude>
-                                    <exclude>com.data-artisans:flakka-remote_*</exclude>
-                                    <exclude>com.data-artisans:flakka-slf4j_*</exclude>
-                                    <exclude>io.netty:netty-all</exclude>
-                                    <exclude>io.netty:netty</exclude>
-                                    <exclude>commons-fileupload:commons-fileupload</exclude>
-                                    <exclude>org.apache.avro:avro</exclude>
-                                    <exclude>commons-collections:commons-collections</exclude>
-                                    <exclude>com.thoughtworks.paranamer:paranamer</exclude>
-                                    <exclude>org.xerial.snappy:snappy-java</exclude>
-                                    <exclude>org.apache.commons:commons-compress</exclude>
-                                    <exclude>org.tukaani:xz</exclude>
-                                    <exclude>com.esotericsoftware.kryo:kryo</exclude>
-                                    <exclude>com.esotericsoftware.minlog:minlog</exclude>
-                                    <exclude>org.objenesis:objenesis</exclude>
-                                    <exclude>com.twitter:chill_*</exclude>
-                                    <exclude>com.twitter:chill-java</exclude>
-                                    <exclude>commons-lang:commons-lang</exclude>
-                                    <exclude>junit:junit</exclude>
-                                    <exclude>org.apache.commons:commons-lang3</exclude>
-                                    <exclude>org.slf4j:slf4j-api</exclude>
-                                    <exclude>org.slf4j:slf4j-log4j12</exclude>
-                                    <exclude>log4j:log4j</exclude>
-                                    <exclude>org.apache.commons:commons-math</exclude>
-                                    <exclude>org.apache.sling:org.apache.sling.commons.json</exclude>
-                                    <exclude>commons-logging:commons-logging</exclude>
-                                    <exclude>commons-codec:commons-codec</exclude>
-                                    <exclude>com.fasterxml.jackson.core:jackson-core</exclude>
-                                    <exclude>com.fasterxml.jackson.core:jackson-databind</exclude>
-                                    <exclude>com.fasterxml.jackson.core:jackson-annotations</exclude>
-                                    <exclude>stax:stax-api</exclude>
-                                    <exclude>com.typesafe:config</exclude>
-                                    <exclude>org.uncommons.maths:uncommons-maths</exclude>
-                                    <exclude>com.github.scopt:scopt_*</exclude>
-                                    <exclude>commons-io:commons-io</exclude>
-                                    <exclude>commons-cli:commons-cli</exclude>
-                                </excludes>
+                                <!--<exclude>log4j:log4j</exclude>-->
+                                <!--<exclude>org.scala-lang:scala-library</exclude>-->
+                                <!--<exclude>org.scala-lang:scala-compiler</exclude>-->
+                                <!--<exclude>org.scala-lang:scala-reflect</exclude>-->
+                                <!--<exclude>com.data-artisans:flakka-actor_*</exclude>-->
+                                <!--<exclude>com.data-artisans:flakka-remote_*</exclude>-->
+                                <!--<exclude>com.data-artisans:flakka-slf4j_*</exclude>-->
+                                <!--<exclude>io.netty:netty-all</exclude>-->
+                                <!--<exclude>io.netty:netty</exclude>-->
+                                <!--<exclude>commons-fileupload:commons-fileupload</exclude>-->
+                                <!--<exclude>org.apache.avro:avro</exclude>-->
+                                <!--<exclude>commons-collections:commons-collections</exclude>-->
+                                <!--<exclude>com.thoughtworks.paranamer:paranamer</exclude>-->
+                                <!--<exclude>org.xerial.snappy:snappy-java</exclude>-->
+                                <!--<exclude>org.apache.commons:commons-compress</exclude>-->
+                                <!--<exclude>org.tukaani:xz</exclude>-->
+                                <!--<exclude>com.esotericsoftware.kryo:kryo</exclude>-->
+                                <!--<exclude>com.esotericsoftware.minlog:minlog</exclude>-->
+                                <!--<exclude>org.objenesis:objenesis</exclude>-->
+                                <!--<exclude>com.twitter:chill_*</exclude>-->
+                                <!--<exclude>com.twitter:chill-java</exclude>-->
+                                <!--<exclude>commons-lang:commons-lang</exclude>-->
+                                <!--<exclude>junit:junit</exclude>-->
+                                <!--<exclude>org.apache.commons:commons-lang3</exclude>-->
+                                <!--<exclude>org.slf4j:slf4j-api</exclude>-->
+                                <!--<exclude>org.slf4j:slf4j-log4j12</exclude>-->
+                                <!--<exclude>log4j:log4j</exclude>-->
+                                <!--<exclude>org.apache.commons:commons-math</exclude>-->
+                                <!--<exclude>org.apache.sling:org.apache.sling.commons.json</exclude>-->
+                                <!--<exclude>commons-logging:commons-logging</exclude>-->
+                                <!--<exclude>commons-codec:commons-codec</exclude>-->
+                                <!--<exclude>com.fasterxml.jackson.core:jackson-core</exclude>-->
+                                <!--<exclude>com.fasterxml.jackson.core:jackson-databind</exclude>-->
+                                <!--<exclude>com.fasterxml.jackson.core:jackson-annotations</exclude>-->
+                                <!--<exclude>stax:stax-api</exclude>-->
+                                <!--<exclude>com.typesafe:config</exclude>-->
+                                <!--<exclude>org.uncommons.maths:uncommons-maths</exclude>-->
+                                <!--<exclude>com.github.scopt:scopt_*</exclude>-->
+                                <!--<exclude>commons-io:commons-io</exclude>-->
+                                <!--<exclude>commons-cli:commons-cli</exclude>-->
+                            <!--</excludes>-->
                             </artifactSet>
                             <filters>
                                 <filter>
@@ -313,54 +313,57 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- 这是个编译scala代码的 -->
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>3.1.4</version>
+                <version>3.4.2</version>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-            <!-- Adding scala source directories to build path -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <!-- Add src/main/scala to eclipse build path -->
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>add-source</goal>
+                            <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/scala</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <!-- Add src/test/scala to eclipse build path -->
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/test/scala</source>
-                            </sources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+
+            <!--&lt;!&ndash; Adding scala source directories to build path &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>build-helper-maven-plugin</artifactId>-->
+                <!--<version>1.7</version>-->
+                <!--<executions>-->
+                    <!--&lt;!&ndash; Add src/main/scala to eclipse build path &ndash;&gt;-->
+                    <!--<execution>-->
+                        <!--<id>add-source</id>-->
+                        <!--<phase>generate-sources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>add-source</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<sources>-->
+                                <!--<source>src/main/scala</source>-->
+                            <!--</sources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                    <!--&lt;!&ndash; Add src/test/scala to eclipse build path &ndash;&gt;-->
+                    <!--<execution>-->
+                        <!--<id>add-test-source</id>-->
+                        <!--<phase>generate-test-sources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>add-test-source</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<sources>-->
+                                <!--<source>src/test/scala</source>-->
+                            <!--</sources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
 
             <!--<plugin>-->

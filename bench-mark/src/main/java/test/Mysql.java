@@ -1,13 +1,14 @@
-package org.tass.ignite;
-
+package test;
 import com.alibaba.druid.pool.DruidDataSource;
+import com.github.spafka.Timer;
 import org.junit.Before;
 import org.junit.Test;
-import org.spafka.Timer;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
+import org.junit.runner.Result;
 import scala.runtime.AbstractFunction0;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.ExecutorService;
@@ -23,16 +24,16 @@ public class Mysql {
     @Before
     public void init() throws SQLException {
         dataSource = new DruidDataSource();
-        //dataSource.setUrl("jdbc:mysql://192.168.26.100:3306/gb32960data?useSSL=false");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
+        dataSource.setUrl("jdbc:mysql://192.168.30.104:3306/gb32960data?useSSL=false");
+        //dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
         dataSource.setPassword("kevin115");
         dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        // dataSource.setPassword("root");
 
         connection = dataSource.getConnection();
         IntStream.range(1, 11).forEach(x -> {
             try (Statement stmt = connection.createStatement()) {
-                String sql = "CREATE TABLE  if NOT exists t_gb32960CompletelyVehicle"+x+" (\n" +
+                String sql = "CREATE TABLE  if NOT exists t_gb32960CompletelyVehicle" + x + " (\n" +
                         "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                         "  `uid` varchar(17) COLLATE utf8_bin NOT NULL COMMENT 'VIN',\n" +
                         "  `unixtimestamp` int(32) NOT NULL,\n" +
@@ -62,15 +63,15 @@ public class Mysql {
     }
 
 
-    @Test
-    public void testSelect() throws SQLException {
-
-        try (Statement stmt = connection.createStatement()) {
-            // Create table based on REPLICATED template
-            ResultSet resultSet = stmt.executeQuery("select count(*) from t_gb32960CompletelyVehicle");
-            System.out.println(resultSet);
-        }
-    }
+//    @Test
+//    public void testSelect() throws SQLException {
+//
+//        try (Statement stmt = connection.createStatement()) {
+//            // Create table based on REPLICATED template
+//            ResultSet resultSet = stmt.executeQuery("select count(*) from t_gb32960CompletelyVehicle");
+//            System.out.println(resultSet);
+//        }
+//    }
 
 
     @Test
@@ -91,7 +92,7 @@ public class Mysql {
                                         try (Statement stmt = connection.createStatement()) {
                                             for (int i = 1; i <= 10; i++) {
                                                 // Create table based on REPLICATED template
-                                                String head = "replace   into t_gb32960CompletelyVehicle"+x+"(uid,unixtimestamp,vehicleState,chargeState,runningMode,speed,mile,totalV,totalI,soc,dcdcState,gear,insulationR,accelerationPedal,brakePedal,dataTime) values";
+                                                String head = "replace   into t_gb32960CompletelyVehicle" + x + "(uid,unixtimestamp,vehicleState,chargeState,runningMode,speed,mile,totalV,totalI,soc,dcdcState,gear,insulationR,accelerationPedal,brakePedal,dataTime) values";
                                                 StringBuilder sb = new StringBuilder();
                                                 for (int j = 0; j <= 10000; j++) {
                                                     if (j == 10000) {
@@ -113,7 +114,7 @@ public class Mysql {
                     );
 
                 });
-                while (!pool.isShutdown()){
+                while (!pool.isShutdown()) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -126,4 +127,16 @@ public class Mysql {
 
 
     }
+
+
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        String[] classAndMethod = "test.Mysql#TestQps".split("#");
+        Request request = Request.method(Class.forName(classAndMethod[0]),
+                classAndMethod[1]);
+
+        Result result = new JUnitCore().run(request);
+        System.exit(result.wasSuccessful() ? 0 : 1);
+    }
 }
+

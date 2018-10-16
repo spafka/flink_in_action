@@ -1,4 +1,4 @@
-package org.spafka
+package com.github.spafka
 
 import org.joda.time.DateTime
 
