@@ -2,7 +2,6 @@ package com.github.spafka.util
 
 import java.io.IOException
 import java.net.BindException
-import java.util
 
 import akka.actor.{ActorSystem, Address, ExtendedActorSystem, Extension, ExtensionKey}
 import com.typesafe.config.{Config, ConfigFactory}
@@ -41,7 +40,7 @@ object AkkaUtils {
          |  remote {
          |    netty {
          |      tcp {
-         |        hostname = localhost
+         |        hostname = ${bindAddress}
          |        bind-hostname = $bindAddress
          |        port = ${port}
          |        bind-port =${port}
@@ -65,7 +64,7 @@ object AkkaUtils {
 
 
   @throws[Exception]
-  def startActorSystem(configuration: util.HashMap[String, String], listeningAddress: String, listeningPort: Int, logger: Logger): ActorSystem = {
+  def startActorSystem(configuration: Map[String, String], listeningAddress: String, listeningPort: Int, logger: Logger): ActorSystem = {
 
     logger.info("Trying to start actor system at {} {}", listeningAddress, listeningPort)
     try {
@@ -83,12 +82,4 @@ object AkkaUtils {
         throw new Exception("Could not create actor system", t)
     }
   }
-
-  def main(args: Array[String]): Unit = {
-    val actorSystem = startActorSystem(null, "0.0.0.0", 6132, LoggerFactory.getLogger("root"))
-
-    val address = AkkaUtils.getAddress(actorSystem)
-    print(address)
-  }
-
 }
