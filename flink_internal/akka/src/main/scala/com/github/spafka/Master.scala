@@ -2,7 +2,7 @@ package com.github.spafka
 
 import java.net.InetAddress
 
-import akka.actor.{Actor, Props}
+import akka.actor.{Actor, ActorRef, Props}
 import com.github.spafka.util.AkkaUtils
 import grizzled.slf4j.Logger
 
@@ -43,7 +43,7 @@ object Master {
         conf.getOrElse("port", "6123").toInt,
         LOG.logger)
 
-    val masterActor = actorSystem.actorOf(Props(classOf[Master], conf), "flink")
+    val masterActor: ActorRef = actorSystem.actorOf(Props(classOf[Master], conf), "flink")
 
     println(masterActor.path)
 
