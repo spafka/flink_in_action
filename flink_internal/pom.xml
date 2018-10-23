@@ -13,6 +13,7 @@
         <module>akka</module>
         <module>mesos</module>
         <module>netty</module>
+        <module>kraps-rpc</module>
     </modules>
 
 
