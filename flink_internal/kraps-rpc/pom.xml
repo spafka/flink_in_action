@@ -278,26 +278,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>timezra.maven</groupId>
-                <artifactId>jacoco-scala-maven-plugin</artifactId>
-                <version>0.6.3.1</version>
-                <executions>
-                    <execution>
-                        <id>post-integration-test</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <filters>
-                                <filter>SCALAC.CASE</filter>
-                                <filter>SCALAC.MIXIN</filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>3.1.0</version>

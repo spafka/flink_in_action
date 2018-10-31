@@ -18,6 +18,8 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -68,7 +70,12 @@ public class NettyClientBootstrap {
             AskParams askParams=new AskParams();
             askParams.setAuth("authToken");
             askMsg.setParams(askParams);
-            bootstrap.socketChannel.writeAndFlush(askMsg);
+            ChannelFuture future = bootstrap.socketChannel.writeAndFlush(askMsg);
+
+
+
+
+
         }
     }
 }

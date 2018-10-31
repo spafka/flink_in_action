@@ -318,7 +318,7 @@
                 <!-- 这是个编译scala代码的 -->
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.3.2</version>
                 <executions>
                     <execution>
                         <id>scala-compile-first</id>
