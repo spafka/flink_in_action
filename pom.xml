@@ -14,11 +14,12 @@
         <module>build-in-cluster</module>
         <module>bench-mark</module>
         <module>flink_in_depth</module>
+        <module>cep</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flink.version>1.6.1</flink.version>
+        <flink.version>1.6.2</flink.version>
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <scala.version>2.11.12</scala.version>
