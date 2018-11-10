@@ -5,7 +5,7 @@ import java.util
 import org.apache.flink.cep.PatternSelectFunction
 import org.apache.flink.cep.scala.CEP
 import org.apache.flink.cep.scala.pattern.Pattern
-import org.apache.flink.configuration.Configuration
+import org.apache.flink.configuration.{Configuration, RestOptions}
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 import org.apache.flink.streaming.api.scala._
@@ -17,7 +17,7 @@ object CepE2ETest2 {
   def main(args: Array[String]): Unit = {
 
     val configuration = new Configuration
-    configuration.setInteger("web.port", 8081)
+    configuration.setInteger(RestOptions.ADDRESS.key(), 8081)
     val flink = //StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration)
 
       StreamExecutionEnvironment.getExecutionEnvironment
