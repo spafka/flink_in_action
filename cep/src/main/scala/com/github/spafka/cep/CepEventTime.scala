@@ -1,5 +1,6 @@
 package com.github.spafka.cep
 
+import java.util.concurrent.TimeUnit
 import java.{lang, util}
 
 import org.apache.flink.cep.PatternSelectFunction
@@ -8,15 +9,14 @@ import org.apache.flink.cep.scala.CEP
 import org.apache.flink.cep.scala.pattern.Pattern
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
+import org.apache.flink.streaming.api.functions.AssignerWithPunctuatedWatermarks
+import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala._
-import org.apache.flink.streaming.api.windowing.time.Time
+import org.apache.flink.streaming.api.watermark.Watermark
 
-import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
-
-object CepE2ETest {
+object CepEventTime {
 
   def main(args: Array[String]): Unit = {
 
@@ -25,39 +25,54 @@ object CepE2ETest {
     val flink = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration)
 
     flink.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
+    flink.setParallelism(1)
 
-    val b0 = new BASEDTO
-    b0.seconds1970 = "3"
-    b0.deviceId = "spafka"
+    val cepStream = flink.addSource(new SourceFunction[BASEDTO] {
+      override def run(ctx: SourceFunction.SourceContext[BASEDTO]): Unit = {
+        while (true) {
 
-    val g1 = new GPSDTO()
-    g1.setDeviceId("spafka")
-    g1.setSeconds1970("1")
+          val time = System.currentTimeMillis().toString
 
-    val g2 = new GPSDTO()
-    g2.setDeviceId("spafka")
-    g2.setSeconds1970("5")
+          val b0 = new BASEDTO
+          b0.seconds1970 = time
+          b0.deviceId = "spafka"
 
+          val g4 = new GPSDTO()
+          g4.setDeviceId("spafka")
+          g4.setSeconds1970(time)
 
-    val g3 = new GPSDTO()
-    g3.setDeviceId("spafka")
-    g3.setSeconds1970("2")
+          val call = new CallDTO()
+          call.setDeviceId("spafka")
+          call.setSeconds1970(time)
 
-    val g4 = new GPSDTO()
-    g4.setDeviceId("spafka")
-    g4.setSeconds1970("3")
+          ctx.collect(b0)
+          ctx.collect(call)
 
+          ctx.collect(g4)
 
-    val call = new CallDTO()
-    call.setDeviceId("spafka")
-    call.setSeconds1970("3")
+          TimeUnit.SECONDS.sleep(1)
 
-    val cepStream: KeyedStream[BASEDTO, String] = flink.fromElements(g4, call, g1, g2, g3, g4)
-      .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[BASEDTO](Time.milliseconds(1)) {
-        override def extractTimestamp(element: BASEDTO): Long = {
-          element.getSeconds1970.toLong
         }
-      }).keyBy(_.deviceId)
+      }
+
+      override def cancel(): Unit = {
+
+      }
+    })
+
+      //      .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[BASEDTO](Time.seconds(1)) {
+      //        override def extractTimestamp(element: BASEDTO): Long = {
+      //          element.getSeconds1970.toLong
+      //        }
+      //      })
+
+      .assignTimestampsAndWatermarks(new AssignerWithPunctuatedWatermarks[BASEDTO]() {
+      override def extractTimestamp(element: BASEDTO, previousTimestamp: Long): Long = element.seconds1970.toLong
+
+      override
+
+      def checkAndGetNextWatermark(lastElement: BASEDTO, extractedTimestamp: Long) = new Watermark(lastElement.seconds1970.toLong - 5)
+    })
 
     val p1 = Pattern
       .begin[BASEDTO]("base")
@@ -78,11 +93,9 @@ object CepE2ETest {
       }
     })
 
-
     CEP.pattern(cepStream, p1).select(new PatternSelectFunction[BASEDTO, Unit] {
       override def select(map: util.Map[String, util.List[BASEDTO]]): Unit = {
-        System.err.println(map.get("base"))
-        System.err.println(map.get("end"))
+        System.err.println(map + "\n-----------------------------")
 
       }
     })
