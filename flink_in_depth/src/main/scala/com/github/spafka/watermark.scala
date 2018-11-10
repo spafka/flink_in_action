@@ -1,9 +1,10 @@
 package com.github.spafka
 
 import grizzled.slf4j.Logger
-import org.apache.flink.configuration.{Configuration, RestOptions}
+import org.apache.flink.configuration.{Configuration, JobManagerOptions, RestOptions}
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.source.SourceFunction
+import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 import org.apache.flink.streaming.api.scala.function.ProcessWindowFunction
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
@@ -21,12 +22,13 @@ object Watermark {
 
 
     val configuration = new Configuration
-    configuration.setInteger(RestOptions.ADDRESS.key(), 8081)
+    configuration.setInteger(JobManagerOptions.ADDRESS.key(), 8081)
     val flink = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration)
-    flink.getConfig.setAutoWatermarkInterval(1000)
+   flink.getConfig.setAutoWatermarkInterval(0L)
 
     println(flink.getConfig.getAutoWatermarkInterval)
-    flink.setMaxParallelism(8)
+    //flink.setMaxParallelism(8)
+    flink.setBufferTimeout(0L)
     flink.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
     val input = flink.addSource(new SourceFunction[String] {
@@ -51,16 +53,17 @@ object Watermark {
       val code = arr(0)
       val time = arr(1).toLong
       (code, time)
-    }).setParallelism(1).assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[(String, Long)](Time.seconds(0)) {
+    })//.setParallelism(1)
+      .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[(String, Long)](Time.seconds(0)) {
       override def extractTimestamp(element: (String, Long)): Long = {
-        println(element)
+        logger.info(element)
         element._2
       }
     }).keyBy(_._1)
       .window(TumblingEventTimeWindows.of(Time.seconds(1)))//.allowedLateness(Time.seconds(10))
       .process(new ProcessWindowFunction[(String, Long), String, String, TimeWindow] {
         override def process(key: String, context: Context, elements: Iterable[(String, Long)], out: Collector[String]): Unit = {
-          println(s"key=${key}, currentWatermark = ${context.currentWatermark}, ${context.window} elements= ${elements.toList}")
+          logger.info(s"key=${key}, currentWatermark = ${context.currentWatermark}, ${context.window} elements= ${elements.toList}")
         }
       })
     flink.execute()
