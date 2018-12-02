@@ -1,5 +1,6 @@
 package com.github.spafka.streaming.flink.Eos;
 
+import com.github.spafka.common.Launcher;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -10,13 +11,12 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.types.Nothing;
 import org.apache.flink.util.Collector;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
-import com.github.spafka.common.Launcher;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -40,7 +40,7 @@ public class FlinkKafkaBackPressure {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
         props.put("group.id", "test");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        FlinkKafkaConsumer010<Long> flinkKafkaConsumer010 = new FlinkKafkaConsumer010("test", new LongDeser(), props);
+        FlinkKafkaConsumer<Long> flinkKafkaConsumer010 = new FlinkKafkaConsumer("test", new LongDeser(), props);
 
         DataStreamSource<Long> kafkaSource = flink.addSource(flinkKafkaConsumer010);
 
