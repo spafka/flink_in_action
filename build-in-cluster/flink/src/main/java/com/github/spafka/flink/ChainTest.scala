@@ -4,11 +4,11 @@ import java.util.Properties
 
 import grizzled.slf4j.Logger
 import org.apache.flink.api.common.accumulators.LongCounter
-import org.apache.flink.api.common.functions.{RichFlatMapFunction, RichMapFunction}
+import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.configuration.{Configuration, JobManagerOptions}
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
 import org.apache.flink.util.Collector
 
 object ChainTest {
@@ -29,7 +29,7 @@ object ChainTest {
     //topicd的名字是new，schema默认使用SimpleStringSchema()即可
     val transaction = flink
       .addSource(
-        new FlinkKafkaConsumer011[String]("spafka", new SimpleStringSchema(), kafkaProps)
+        new FlinkKafkaConsumer[String]("spafka", new SimpleStringSchema(), kafkaProps)
       ).flatMap(new RichFlatMapFunction[String, String] {
       private lazy val logger = Logger("kafka")
       private lazy val counter = new LongCounter()

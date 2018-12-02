@@ -28,8 +28,9 @@ import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor;
 import org.apache.flink.streaming.api.watermark.Watermark;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
+
 
 import javax.annotation.Nullable;
 
@@ -73,7 +74,7 @@ public class Kafka010Example {
 
         DataStream<String> input = env
                 .addSource(
-                        new FlinkKafkaConsumer010<>(
+                        new FlinkKafkaConsumer<>(
                                 parameterTool.getRequired("input-topic"),
                                 new SimpleStringSchema(),
                                 parameterTool.getProperties())
@@ -81,7 +82,7 @@ public class Kafka010Example {
                 .map(new PrefixingMapper(prefix));
 
         input.addSink(
-                new FlinkKafkaProducer010<>(
+                new FlinkKafkaProducer<>(
                         parameterTool.getRequired("output-topic"),
                         new SimpleStringSchema(),
                         parameterTool.getProperties()));

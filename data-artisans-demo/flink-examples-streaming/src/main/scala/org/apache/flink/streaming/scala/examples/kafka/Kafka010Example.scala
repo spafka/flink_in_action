@@ -22,7 +22,7 @@ import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.scala._
-import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer010, FlinkKafkaProducer010}
+import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 
 /**
   * An example that shows how to read from and write to Kafka. This will read String messages
@@ -64,7 +64,7 @@ object Kafka010Example {
     env.getConfig.setGlobalJobParameters(params)
 
     // create a Kafka streaming source consumer for Kafka 0.10.x
-    val kafkaConsumer = new FlinkKafkaConsumer010(
+    val kafkaConsumer = new FlinkKafkaConsumer(
       params.getRequired("input-topic"),
       new SimpleStringSchema,
       params.getProperties)
@@ -74,7 +74,7 @@ object Kafka010Example {
       .map(in => prefix + in)
 
     // create a Kafka producer for Kafka 0.10.x
-    val kafkaProducer = new FlinkKafkaProducer010(
+    val kafkaProducer = new FlinkKafkaProducer(
       params.getRequired("output-topic"),
       new SimpleStringSchema,
       params.getProperties)
