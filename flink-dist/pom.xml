@@ -338,20 +338,6 @@
 
     <build>
         <plugins>
-            <!--unit tests-->
-            <!--plugin must appear BEFORE the shade-plugin to not mess up package order and include the non-uber JAR into the assembly-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <reuseForks>false</reuseForks>
-                    <!-- <workingDirectory>${project.build.testOutputDirectory}</workingDirectory> -->
-                    <systemPropertyVariables>
-                        <log.level>WARN</log.level>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-
             <!--Build uber jar-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -433,30 +419,6 @@
                 <version>2.4</version><!--$NO-MVN-MAN-VER$-->
                 <configuration>
                     <skip>true</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
-                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <skipPoms>false</skipPoms>
-                    <generateGitPropertiesFilename>src/main/flink-bin/.version.properties</generateGitPropertiesFilename>
-                    <gitDescribe>
-                        <!-- don't generate the describe property -->
-                        <skip>true</skip>
-                    </gitDescribe>
                 </configuration>
             </plugin>
         </plugins>
