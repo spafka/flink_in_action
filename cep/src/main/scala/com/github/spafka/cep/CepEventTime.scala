@@ -4,7 +4,8 @@ import java.util.concurrent.TimeUnit
 import java.{lang, util}
 
 import org.apache.flink.cep.PatternSelectFunction
-import org.apache.flink.cep.pattern.conditions.{Context, IterativeCondition}
+import org.apache.flink.cep.pattern.conditions.IterativeCondition
+import org.apache.flink.cep.pattern.conditions.IterativeCondition.Context
 import org.apache.flink.cep.scala.CEP
 import org.apache.flink.cep.scala.pattern.Pattern
 import org.apache.flink.configuration.Configuration

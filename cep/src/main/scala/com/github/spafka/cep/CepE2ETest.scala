@@ -3,7 +3,8 @@ package com.github.spafka.cep
 import java.{lang, util}
 
 import org.apache.flink.cep.PatternSelectFunction
-import org.apache.flink.cep.pattern.conditions.{Context, IterativeCondition}
+import org.apache.flink.cep.pattern.conditions.IterativeCondition
+import org.apache.flink.cep.pattern.conditions.IterativeCondition.Context
 import org.apache.flink.cep.scala.CEP
 import org.apache.flink.cep.scala.pattern.Pattern
 import org.apache.flink.configuration.Configuration
@@ -12,7 +13,6 @@ import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrderness
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.time.Time
 
-import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
 
