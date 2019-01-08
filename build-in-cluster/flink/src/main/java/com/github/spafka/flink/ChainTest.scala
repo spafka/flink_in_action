@@ -27,10 +27,7 @@ object ChainTest {
     kafkaProps.setProperty("group.id", "cep")
 
     //topicd的名字是new，schema默认使用SimpleStringSchema()即可
-    val transaction = flink
-      .addSource(
-        new FlinkKafkaConsumer[String]("spafka", new SimpleStringSchema(), kafkaProps)
-      ).flatMap(new RichFlatMapFunction[String, String] {
+    val transaction = flink.addSource(new FlinkKafkaConsumer[String]("spafka", new SimpleStringSchema(), kafkaProps)).flatMap(new RichFlatMapFunction[String, String] {
       private lazy val logger = Logger("kafka")
       private lazy val counter = new LongCounter()
 
