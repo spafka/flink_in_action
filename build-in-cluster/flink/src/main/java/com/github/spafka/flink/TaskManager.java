@@ -1,17 +1,17 @@
 package com.github.spafka.flink;
 
-import org.apache.flink.runtime.taskmanager.TaskManager$;
+import org.apache.flink.runtime.taskexecutor.TaskManagerRunner;
 
 public class TaskManager {
 
-    public static void main(String[] args) {
-
-     args=   String.format("--configDir %s",
+    public static void main(String[] args) throws Exception {
+        System.setProperty("log.file","taskmanager.log");
+        args = String.format("--configDir %s",
                 Thread.currentThread()
                         .getContextClassLoader()
                         .getResource("flink-conf.yaml")
-                        .getFile()+"/..").split(" ");
-        TaskManager$.MODULE$.main(args);
+                        .getFile() + "/..").split(" ");
+        TaskManagerRunner.main(args);
 
     }
 }
