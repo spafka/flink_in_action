@@ -21,11 +21,11 @@ public class Mysql {
     @BeforeSuite
     public void init() throws SQLException {
         dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://192.168.30.102:3306/gb32960data?useSSL=false");
-       // dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
-        dataSource.setPassword("kevin115");
+//        dataSource.setUrl("jdbc:mysql://192.168.30.102:3306/gb32960data?useSSL=false");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/gb32960data?useSSL=false");
+       // dataSource.setPassword("kevin115");
         dataSource.setUsername("root");
-        //dataSource.setPassword("root");
+        dataSource.setPassword("root");
 
         connection = dataSource.getConnection();
 
@@ -75,9 +75,10 @@ public class Mysql {
     public void TestQps() {
 
 
-        try (Statement stmt = connection.createStatement()) {
+
             for (int i = 1; i <= 100; i++) {
                                                 // Create table based on REPLICATED template
+                try (Connection connection=dataSource.getConnection();Statement stmt = connection.createStatement()) {
                 String head = "replace   into t_gb32960CompletelyVehicle" + "(uid,unixtimestamp,vehicleState,chargeState,runningMode,speed,mile,totalV,totalI,soc,dcdcState,gear,insulationR,accelerationPedal,brakePedal,dataTime) values";
                                                 StringBuilder sb = new StringBuilder();
                                                 for (int j = 0; j <= 10000; j++) {
@@ -89,10 +90,10 @@ public class Mysql {
                                                     }
                                                 }
                                                 stmt.execute(head + sb);
-                                            }
-                                        } catch (SQLException e) {
-                                            e.printStackTrace();
-                                        }
+                                            } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         System.out.println(Thread.currentThread().getName() + " " + new Date());
 
 
