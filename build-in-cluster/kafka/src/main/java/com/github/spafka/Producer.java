@@ -17,18 +17,13 @@
 package com.github.spafka;
 
 
-import org.apache.commons.io.FileUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class Producer extends Thread {
     private final KafkaProducer<Integer, String> producer;
@@ -37,7 +32,7 @@ public class Producer extends Thread {
 
     public Producer(String topic) {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "iovdc13" + ":" + 9092);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost" + ":" + 9092);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "test");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName());
@@ -48,7 +43,7 @@ public class Producer extends Thread {
 
     public static void main(String[] args) throws InterruptedException {
 
-        Producer producer = new Producer("reissue2sh");
+        Producer producer = new Producer("test");
         new Thread(producer).start();
         producer.join();
 
@@ -56,38 +51,15 @@ public class Producer extends Thread {
     }
 
 
-
     @Override
     public void run() {
-
-
-        BitAndByteUtil b2b = new BitAndByteUtil();
-
-
-        try {
-            List<String> strings = FileUtils.readLines(new File("D:\\OpenAi\\spafka\\flink_in_action\\build-in-cluster\\kafka\\src\\main\\resources\\13171.txt"), Charset.defaultCharset());
-            strings.forEach(x -> {
-                byte[] bytes = b2b.hexStringToBytes(x);
-
-
-
-                if (bytes[2]==1||bytes[2]==4) return;
-                    bytes[2]=3;
-                producer.send(new ProducerRecord(topic, bytes));
-            });
-
-
-        } catch (IOException e) {
-
+        while (true) {
+            producer.send(new ProducerRecord(topic, "flink in action".getBytes()));
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+            }
         }
-
-
-        try {
-            Thread.sleep(100000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 }
 

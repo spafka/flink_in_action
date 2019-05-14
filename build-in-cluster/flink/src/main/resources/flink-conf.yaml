@@ -7,9 +7,9 @@ taskmanager.numberOfTaskSlots: 10
 
 parallelism.default: 1
 
-high-availability: zookeeper
-high-availability.zookeeper.quorum: localhost:2181
-high-availability.storageDir: d:\\zk\
+#high-availability: zookeeper
+#high-availability.zookeeper.quorum: localhost:2181
+#high-availability.storageDir: d:\\zk\
 
 rest.port: 8081
 
