@@ -110,7 +110,7 @@ public class FlinkServer {
 
         try {
             miniCluster.start();
-            configuration.setInteger(RestOptions.PORT, miniCluster.getRestAddress().getPort());
+
             // enter tab to break
             for (; System.in.read() >= 10; ) {
             }

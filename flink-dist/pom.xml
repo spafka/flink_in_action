@@ -244,15 +244,16 @@
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-ml_${scala.binary.version}</artifactId>
+            <artifactId>flink-ml-api</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-table_${scala.binary.version}</artifactId>
+            <artifactId>flink-table</artifactId>
             <version>${flink.version}</version>
+            <type>pom</type>
             <scope>provided</scope>
         </dependency>
 
@@ -323,13 +324,7 @@
             </activation>
             <!-- Scala Shell doesn't currently work with Scala 2.12 so only include
             when building for Scala 2.11. -->
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.flink</groupId>
-                    <artifactId>flink-scala-shell_${scala.binary.version}</artifactId>
-                    <version>${flink.version}</version>
-                </dependency>
-            </dependencies>
+
         </profile>
 
 
